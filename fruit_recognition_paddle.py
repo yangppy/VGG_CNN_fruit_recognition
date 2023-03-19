@@ -7,7 +7,7 @@
 @Author  ：xiaoyang
 @Date    ：2023/3/18 11:01 
 '''
-import paddlepaddle
+import paddle
 import paddle.fluid as fluid
 import numpy
 import sys
@@ -28,7 +28,7 @@ def train_mapper(sample):
         print(img, "图片不存在")
 
     # 读取图片内容
-    img = paddle.dataset.image.load(img)
+    img = paddle.dataset.image.load_image(img)
     # 对图片数据进行简单变换，设置为固定大小
     img = paddle.dataset.image.simple_transform(im=img,  # 原始图像
                                                 resize_size=128,  # 图像要设置的大小
@@ -50,10 +50,10 @@ def get_train_data(train_list, buffered_size=1024):
                 img_path, lab = line.replace("\n", "").split("\t")
                 yield img_path, int(lab)  # 返回图片路径，类别(整数)
 
-    return paddle.reader.xmp_readers(train_mapper,  # 将reader读取的数进一步处理
-                                     reader,  # reader读取到的数据传递给train_mapper
-                                     cpu_count,  # 线程数量
-                                     buffered_size)  # 缓冲区大小
+    return paddle.reader.xmap_readers(train_mapper,  # 将reader读取的数进一步处理
+                                      reader,  # reader读取到的数据传递给train_mapper
+                                      cpu_count(),  # 线程数量
+                                      buffered_size)  # 缓冲区大小
 
 
 # 搭建CNN函数
@@ -127,7 +127,7 @@ cost = fluid.layers.cross_entropy(input=predict,  # 预测结果
 avg_cost = fluid.layers.mean(cost)
 
 # 计算准确率
-accuracy = fluid.layers.accurary(input=predict,  # 预测结果
+accuracy = fluid.layers.accuracy(input=predict,  # 预测结果
                                  label=label)  # 真实结果
 
 # 优化器
@@ -166,7 +166,7 @@ for pass_id in range(40):
 if not os.path.exists(model_save_dir):
     os.makedirs(model_save_dir)
 fluid.io.save_inference_model(dirname=model_save_dir,
-                              feed_var_names=["image"],
+                              feeded_var_names=["image"],
                               target_vars=[predict],
                               executor=exe)
 print("模型训练保存完毕！")
