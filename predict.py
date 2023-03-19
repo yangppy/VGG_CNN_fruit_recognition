@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 # 定义执行器
 place = fluid.CPUPlace()
 infer_exe = fluid.Executor(place)
-model_save_dir = 'fruits/'  # 模型保存路径
+model_save_dir = 'model/fruits/'  # 模型保存路径
 name_dict = {"apple": 0, "banana": 1, "grape": 2, "orange": 3, "pear": 4}
 
 
@@ -29,7 +29,7 @@ def load_img(path):
 
 
 infer_imgs = []  # 存放要预测图像数据
-test_img = "./fruits/apple0.png"  # 带预测的图片
+test_img = "3.jpeg"  # 带预测的图片
 infer_imgs.append(load_img((test_img)))  # 加载图片，并且将图片数据添加到带预测列表
 infer_imgs = numpy.array(infer_imgs)  # 转成数组
 
