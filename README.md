@@ -1,0 +1,2 @@
+# VGG_CNN_fruit_recognition
+用python实现并基于paddle框架搭建CNN和VGG模型进行训练
